@@ -1,6 +1,7 @@
 import os
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from src.main import (
     AppConfig,
@@ -107,6 +108,36 @@ class HealthReportTests(unittest.TestCase):
         self.assertTrue(report.python_version_supported)
         self.assertTrue(report.writable_project_directory)
         self.assertTrue(report.tests_present)
+
+
+    def test_build_health_report_detects_missing_tests(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            report = build_health_report(project_directory=tmpdir)
+
+        self.assertFalse(report.tests_present)
+
+    def test_build_health_report_detects_unsupported_python_when_minimum_is_higher(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tests_dir = os.path.join(tmpdir, "tests")
+            os.makedirs(tests_dir, exist_ok=True)
+            with open(os.path.join(tests_dir, "test_sample.py"), "w", encoding="utf-8") as test_file:
+                test_file.write("def test_placeholder():\n    assert True\n")
+
+            report = build_health_report(project_directory=tmpdir, minimum_python=(99, 0))
+
+        self.assertFalse(report.python_version_supported)
+
+    def test_build_health_report_detects_non_writable_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tests_dir = os.path.join(tmpdir, "tests")
+            os.makedirs(tests_dir, exist_ok=True)
+            with open(os.path.join(tests_dir, "test_sample.py"), "w", encoding="utf-8") as test_file:
+                test_file.write("def test_placeholder():\n    assert True\n")
+
+            with patch("src.main.os.access", return_value=False):
+                report = build_health_report(project_directory=tmpdir)
+
+        self.assertFalse(report.writable_project_directory)
 
     def test_format_health_report_prints_named_checks(self) -> None:
         report = HealthReport(

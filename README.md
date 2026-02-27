@@ -13,7 +13,7 @@
 ## 3. Installation
 ```bash
 # Clone the repository
-git clone <REPOSITORY_URL>
+git clone https://github.com/openai/codex.git
 cd animated-garbanzo
 ```
 

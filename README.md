@@ -1,55 +1,111 @@
-# animated-garbanzo
+# animated-garbanzo (Modern Rebuild)
 
-## 1. Project overview
-`animated-garbanzo` is a minimal Python starter project with a runnable entry point and a unit test suite.
+A complete modernization of the original starter into a production-ready React + TypeScript + Tailwind application.
 
-## 2. Prerequisites
-- Git `>= 2.40`
-- Python `>= 3.10`
+## 1) Stack
+- Vite
+- React 18
+- TypeScript
+- Tailwind CSS
+- Vitest + Testing Library
+- ESLint
 
-## 3. Installation
-```bash
-# Clone the repository
-git clone https://github.com/openai/codex.git
-cd animated-garbanzo
+## 2) New folder structure
+
+```text
+.
+├── ARCHITECTURE_DECISIONS.md
+├── AUDIT_REPORT.md
+├── index.html
+├── package.json
+├── postcss.config.js
+├── tailwind.config.ts
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+├── vite.config.ts
+├── vitest.config.ts
+└── src
+    ├── App.tsx
+    ├── main.tsx
+    ├── components
+    │   ├── Button.tsx
+    │   ├── MetricCard.tsx
+    │   ├── PrinciplesList.tsx
+    │   ├── ProjectHero.test.tsx
+    │   └── ProjectHero.tsx
+    ├── data
+    │   └── projectStatus.ts
+    ├── hooks
+    │   └── useProjectStatus.ts
+    ├── layouts
+    │   └── AppLayout.tsx
+    ├── pages
+    │   └── HomePage.tsx
+    ├── styles
+    │   └── index.css
+    ├── test
+    │   └── setup.ts
+    ├── types
+    │   └── project.ts
+    └── utils
+        └── formatting.ts
 ```
 
-No third-party dependencies are required right now.
+## 3) Setup instructions
 
-## 4. Running locally
 ```bash
-python -m src.main
+npm install
+npm run dev
 ```
 
-## 5. Testing
+Open `http://localhost:5173`.
+
+## 4) Scripts
+
 ```bash
-python -m unittest discover -s tests -p 'test_*.py'
+npm run dev      # local development
+npm run build    # production build
+npm run preview  # preview built app
+npm run lint     # static checks
+npm run test     # unit tests
 ```
 
-## 6. Project structure
-Current repository contents:
+## 5) Dependencies
 
-- `src/main.py` — App entry point with core project description function.
-- `tests/test_main.py` — Unit tests for the entry point logic.
-- `README.md` — Project documentation and onboarding instructions.
+### Runtime
+- `react`
+- `react-dom`
 
-## 7. Contributing
-Use the following baseline process:
+### Dev
+- `vite`
+- `typescript`
+- `tailwindcss`
+- `postcss`
+- `autoprefixer`
+- `eslint`, `@eslint/js`, `typescript-eslint`
+- `vitest`, `jsdom`, `@testing-library/react`, `@testing-library/jest-dom`
+- `@vitejs/plugin-react`
 
-1. Create a feature branch from `main`:
-   ```bash
-   git checkout -b feature/<short-description>
-   ```
-2. Make focused, atomic commits with clear messages:
-   ```bash
-   git add <files>
-   git commit -m "feat: describe change"
-   ```
-3. Run all required tests/lint checks (see **Testing**).
-4. Open a pull request that includes:
-   - A concise summary of what changed.
-   - Test evidence (commands run + results).
-   - Any follow-up TODOs or known limitations.
+## 6) Migration guide from legacy project
 
-## 8. License
-License TBD.
+Legacy app was a Python-only starter exposing `describe_project()` and a matching unittest.
+
+### Preserved core functionality
+The same core message is preserved and now surfaced in the UI:
+
+> "animated-garbanzo is ready for initial development."
+
+### Migration steps
+1. Install Node.js 20+.
+2. Run `npm install`.
+3. Replace old Python run/test workflow with Vite/Vitest scripts.
+4. Use the new modular structure for future features.
+
+## 7) Design goals implemented
+- Minimal editorial UI
+- Neutral color palette
+- Soft shadow system
+- Generous spacing
+- Responsive component grid
+- Reusable button variants

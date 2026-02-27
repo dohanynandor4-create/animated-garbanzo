@@ -18,7 +18,38 @@ No third-party dependencies are required right now.
 
 ## 4. Running locally
 ```bash
+# Default description output
 python -m src.main
+# expected output:
+# animated-garbanzo is ready for initial development.
+
+# Human-readable status
+python -m src.main --status
+# expected output (example):
+# project: animated-garbanzo
+# description: animated-garbanzo is ready for initial development.
+# python: 3.11.11
+
+# Human-readable checks
+python -m src.main --check
+# expected output (example):
+# python_version_supported: PASS
+# tests_present: PASS
+
+# Machine-readable status + checks
+python -m src.main --status --check --json
+# expected output (example):
+# {
+#   "checks": {
+#     "python_version_supported": true,
+#     "tests_present": true
+#   },
+#   "status": {
+#     "description": "animated-garbanzo is ready for initial development.",
+#     "project": "animated-garbanzo",
+#     "python": "3.11.11"
+#   }
+# }
 ```
 
 ## 5. Testing

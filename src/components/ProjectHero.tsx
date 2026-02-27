@@ -12,6 +12,12 @@ type ProjectHeroProps = {
 export function ProjectHero({ project }: ProjectHeroProps) {
   const [showDetails, setShowDetails] = useState(true);
 
+  const refreshState = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      window.location.reload();
+    }
+  }, []);
+
   const formattedName = useMemo(() => titleCase(project.name), [project.name]);
 
   const toggleDetails = useCallback(() => {
@@ -28,7 +34,7 @@ export function ProjectHero({ project }: ProjectHeroProps) {
           <Button onClick={toggleDetails} variant="primary">
             {showDetails ? 'Hide details' : 'Show details'}
           </Button>
-          <Button onClick={() => window.location.reload()} variant="secondary">
+          <Button onClick={refreshState} variant="secondary">
             Refresh state
           </Button>
         </div>

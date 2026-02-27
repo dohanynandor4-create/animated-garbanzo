@@ -2,7 +2,17 @@ import os
 import tempfile
 import unittest
 
-from src.main import AppConfig, describe_project, format_config, load_config, parse_bool, parse_dotenv
+from src.main import (
+    AppConfig,
+    HealthReport,
+    build_health_report,
+    describe_project,
+    format_config,
+    format_health_report,
+    load_config,
+    parse_bool,
+    parse_dotenv,
+)
 
 
 class DescribeProjectTests(unittest.TestCase):
@@ -80,6 +90,37 @@ class FormatConfigTests(unittest.TestCase):
             "environment: development\n\n"
             "debug mode: False\n\n"
             "runtime checks: True",
+        )
+
+
+class HealthReportTests(unittest.TestCase):
+    def test_build_health_report_detects_required_checks(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tests_dir = os.path.join(tmpdir, "tests")
+            os.makedirs(tests_dir, exist_ok=True)
+            with open(os.path.join(tests_dir, "test_sample.py"), "w", encoding="utf-8") as test_file:
+                test_file.write("def test_placeholder():\n    assert True\n")
+
+            report = build_health_report(project_directory=tmpdir)
+
+        self.assertIsInstance(report, HealthReport)
+        self.assertTrue(report.python_version_supported)
+        self.assertTrue(report.writable_project_directory)
+        self.assertTrue(report.tests_present)
+
+    def test_format_health_report_prints_named_checks(self) -> None:
+        report = HealthReport(
+            python_version_supported=True,
+            writable_project_directory=True,
+            tests_present=False,
+        )
+
+        self.assertEqual(
+            format_health_report(report),
+            "health report:\n"
+            "python version supported: True\n"
+            "writable project directory: True\n"
+            "tests present: False",
         )
 
 

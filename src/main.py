@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -15,6 +16,15 @@ class AppConfig:
     environment: str
     debug_mode: bool
     runtime_checks: bool
+
+
+@dataclass(frozen=True)
+class HealthReport:
+    """Simple runtime health checks for local execution context."""
+
+    python_version_supported: bool
+    writable_project_directory: bool
+    tests_present: bool
 
 
 def parse_bool(raw_value: str, default: bool = False) -> bool:
@@ -63,6 +73,21 @@ def load_config(dotenv_path: str = ".env") -> AppConfig:
     )
 
 
+def build_health_report(
+    project_directory: str = ".",
+    minimum_python: tuple[int, int] = (3, 10),
+    tests_directory: str = "tests",
+) -> HealthReport:
+    """Build a health report for core runtime preconditions."""
+    tests_dir = Path(project_directory) / tests_directory
+
+    return HealthReport(
+        python_version_supported=sys.version_info >= minimum_python,
+        writable_project_directory=os.access(project_directory, os.W_OK),
+        tests_present=tests_dir.exists() and any(tests_dir.glob("test_*.py")),
+    )
+
+
 def describe_project() -> str:
     """Return a short description of the project state."""
     return "animated-garbanzo is ready for initial development."
@@ -78,5 +103,19 @@ def format_config(config: AppConfig) -> str:
     )
 
 
+def format_health_report(report: HealthReport) -> str:
+    """Format health report fields for display."""
+    return (
+        "health report:\n"
+        f"python version supported: {report.python_version_supported}\n"
+        f"writable project directory: {report.writable_project_directory}\n"
+        f"tests present: {report.tests_present}"
+    )
+
+
 if __name__ == "__main__":
-    print(format_config(load_config()))
+    config = load_config()
+    print(format_config(config))
+    if config.runtime_checks:
+        print()
+        print(format_health_report(build_health_report()))
